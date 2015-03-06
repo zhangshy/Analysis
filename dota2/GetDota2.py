@@ -6,6 +6,7 @@ import urllib
 from urllib2 import urlopen
 import json
 import threading
+from multiprocessing import Pool
 from config import STEAM_APIKEY
 
 lock = threading.Lock()
@@ -53,7 +54,9 @@ def getMatchDetails(match_id):
     url = "https://api.steampowered.com/IDOTA2Match_570/GetMatchDetails/V001/"
     params = {'key':STEAM_APIKEY, 'match_id':match_id}
     f = urlopen("%s?%s" % (url, urllib.urlencode(params)))
-    return json.loads(f.read())['result']
+    detail = json.loads(f.read())['result']
+    print('%d is end' % (match_id))
+    return detail
 
 def getMatchDetails2list(match_id):
     detail = getMatchDetails(match_id)
@@ -74,16 +77,14 @@ def getDataFromtxt(txt):
         data=json.loads(fi.read())
     return data
 
+def getAllMatchDetails():
+    matches = getDataFromtxt('dac_matches.txt')
+    p = Pool(5)
+    match_details = p.map(getMatchDetails, [match['match_id'] for match in matches])
+    with open('dac_match_details.txt', 'w') as fo:
+        fo.write(json.dumps(match_details))
+    print(len(match_details))
 
 if __name__=="__main__":
-    matches = getDataFromtxt('dac_matches.txt')
-    ts=[]
-    for match in matches[:3]:
-        t = threading.Thread(target=getMatchDetails2list, args=(match['match_id'],))
-        t.start()
-        ts.append(t)
-    for t in ts:
-        t.join()
-    print("main end")
-    print(match_details)
+    pass
 
