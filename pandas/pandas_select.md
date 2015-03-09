@@ -1,5 +1,5 @@
 # 1. 数据选择 #
-## 1.1集中选择方法 ##
+## 1.1几种选择方法 ##
 * .loc 通过label选择，当找不到指定元素时会抛出KeyError，输入可以：
 	* 单独的标签，如5或'a'。（注意5被解释成index的label，**并不是**指index的整数位置）
 	* 标签的列表或数组['a', 'b', 'c']
@@ -13,7 +13,7 @@
 * .ix 支持整数和标签混合输入。但是当axis是基于整数的时候，**ONLY** lable based access and not positinal access is supported. 这种情况下应明确使用哪种，是.iloc还是.loc
 
 以loc为例，各种数据的使用（p.loc['a']等价于p.loc['a'], :, :）	
-<table>
+<table class="table">
 	<tr><td>Object Type</td><td>Indexers</td></tr>
 	<tr><td>Series</td><td>s.loc[indexer]</td></tr>
 	<tr><td>DataFrame</td><td>df.loc[row_indexer,column_indexer]</td></tr>
